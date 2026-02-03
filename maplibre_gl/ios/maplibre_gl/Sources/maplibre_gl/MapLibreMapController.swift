@@ -433,6 +433,15 @@ class MapLibreMapController: NSObject, FlutterPlatformView, MLNMapViewDelegate, 
             reply["x"] = returnVal.x as NSObject
             reply["y"] = returnVal.y as NSObject
             result(reply)
+        case "map#activateMLNAnnotationView":
+            let center = CLLocationCoordinate2D(latitude: -6.974234, longitude: 107.552392)
+            let locations = generateLocations(center: center, count: 200)
+                    
+                    // Create annotations
+                    let annotations = locations.map { coordinate in
+                        CustomAnnotation(coordinate: coordinate)
+                    }
+            mapView.addAnnotations(annotations)
         case "map#toScreenLocationBatch":
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
             guard let data = arguments["coordinates"] as? FlutterStandardTypedData else { return }
@@ -1389,6 +1398,28 @@ class MapLibreMapController: NSObject, FlutterPlatformView, MLNMapViewDelegate, 
             }
         }
     }
+
+     func generateLocations(center: CLLocationCoordinate2D, count: Int, spread: Double = 0.015) -> [CLLocationCoordinate2D] {
+                (0..<count).map { _ in
+                    CLLocationCoordinate2D(
+                        latitude: center.latitude + Double.random(in: -spread...spread),
+                        longitude: center.longitude + Double.random(in: -spread...spread)
+                    )
+                }
+            }
+
+     func mapView(_ mapView: MLNMapView, viewFor annotation: MLNAnnotation) -> MLNAnnotationView? {
+            guard annotation is CustomAnnotation else { return nil }
+            
+            let reuseId = "pulsing"
+            var view = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId)
+            
+            if view == nil {
+                view = SimpleBouncingView(annotation: annotation, reuseIdentifier: reuseId)
+            }
+            
+            return view
+        }
 
     // handle missing images
     func mapView(_: MLNMapView, didFailToLoadImage name: String) -> UIImage? {
