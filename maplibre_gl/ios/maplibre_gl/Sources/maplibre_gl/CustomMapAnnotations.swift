@@ -26,9 +26,9 @@ class SimpleBouncingView: MLNAnnotationView {
     }
     
     private func setupView() {
-        frame = CGRect(x: 0, y: 0, width: 19, height: 19)
+        frame = CGRect(x: 0, y: 0, width: 40, height: 40)
         backgroundColor = .systemRed
-        layer.cornerRadius = 9.5  // ✅ Half of 19
+        layer.cornerRadius = 20  // ✅ Half of 19
     }
     
     private func startBounce() {
