@@ -17,7 +17,8 @@ class SimpleBouncingView: MLNAnnotationView {
     override init(annotation: MLNAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
         setupView()
-        startBounce()
+        // startBounce()
+        setupGesture()
     }
     
     required init?(coder: NSCoder) {
@@ -38,5 +39,21 @@ class SimpleBouncingView: MLNAnnotationView {
         ) {
             self.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
         }
+    }
+
+     func setupGesture(){
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        tap.delaysTouchesBegan = false
+        tap.delaysTouchesEnded = false
+        self.addGestureRecognizer(tap)
+        self.isUserInteractionEnabled = true
+        print("Makan Nih")
+        
+    }
+    
+    @objc func handleTap(){
+        print("Halo Bang")
+        backgroundColor = .systemGreen
+        // onTap?()
     }
 }
